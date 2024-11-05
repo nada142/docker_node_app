@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>DockerFile</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="../assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.27/dist/sweetalert2.min.css">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.27/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      .line-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+      .line-text {
+        flex: 1;
+        margin-right: 10px;
+      }
+      .line-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .line-actions button {
+        margin-bottom: 5px;
+      }
+    </style>
+    <!-- Fonts and icons -->
+    <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["../assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="../assets/css/demo.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .container {
+      margin-top: 20px;
+    }
+    .page-header {
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 15px;
+    }
+    .breadcrumbs {
+      padding: 0;
+      list-style: none;
+    }
+    .breadcrumbs li {
+      display: inline;
+      margin-right: 5px;
+    }
+    .breadcrumbs li i {
+      margin-right: 5px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .btn-secondary {
+      margin: 5px;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .btn-group .btn {
+      margin: 5px;
+    }
+    #details-container {
+      margin-top: 20px;
+    }
+    #lines-container {
+      margin-top: 20px;
+    }
+    #generate-dockerfile {
+      margin-top: 20px;
+    }
+    .form-control {
+      border-radius: 0.25rem;
+    }
+  </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="/" class="logo" style="display: flex; align-items: center;">
+              <img src="assets/img/kaiadmin/icon.svg" alt="navbar brand" class="navbar-brand" height="20" />
+              <span style="margin-left: 8px; font-size: 1.2em; font-weight: bold; color: aliceblue;">DockerPilot</span>
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a href="/" aria-expanded="false">
+                  <i class="fas fa-home"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a href="/dockerfile_list">
+                  <i class="fas fa-pen-square"></i>
+                  <p>Dockerfile</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dockerimg">
+                  <i class="fas fa-layer-group"></i>
+                  <p>Docker Images</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dockercontainers">
+                  <i class="fas fa-th-list"></i>
+                  <p>Docker Containers</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#" onclick="logout()">
+                  <i class="fas fa-bars"></i>
+                  <p>Logout</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- End Sidebar -->
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+              <a href="../index.html" class="logo">
+                <img src="../assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" />
+              </a>
+              <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                  <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                  <i class="gg-menu-left"></i>
+                </button>
+              </div>
+              <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+              </button>
+            </div>
+            <!-- End Logo Header -->
+          </div>
+          <!-- Navbar Header -->
+          <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+            <div class="container-fluid">
+              <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button type="submit" class="btn btn-search pe-1">
+                      <i class="fa fa-search search-icon"></i>
+                    </button>
+                  </div>
+                  <input type="text" placeholder="Search ..." class="form-control" />
+                </div>
+              </nav>
+              <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
+                    <i class="fa fa-search"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-search animated fadeIn">
+                    <form class="navbar-left navbar-form nav-search">
+                      <div class="input-group">
+                        <input type="text" placeholder="Search ..." class="form-control" />
+                      </div>
+                    </form>
+                  </ul>
+                </li>
+                <li class="nav-item topbar-user dropdown hidden-caret">
+                  <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="/profile" aria-expanded="false">
+                    <span class="profile-username">
+                      <span class="op-7">Hi,</span>
+                      <span class="fw-bold">Hizrian</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user animated fadeIn">
+                    <div class="dropdown-user-scroll scrollbar-outer">
+                      <li>
+                        <div class="user-box">
+                          <div class="avatar-lg">
+                            <img src="assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                          </div>
+                          <div class="u-text">
+                            <h4>Hizrian</h4>
+                            <p class="text-muted">hello@example.com</p>
+                            <a href="/profile" class="btn btn-xs btn-secondary btn-sm">Update Profile</a>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="logout()">Logout</a>
+                      </li>
+                    </div>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              var user = JSON.parse(localStorage.getItem("user"));
+              if (user) {
+                document.querySelector(".profile-username .fw-bold").textContent = user.username;
+                document.querySelector(".u-text h4").textContent = user.username;
+                document.querySelector(".u-text .text-muted").textContent = user.email;
+              }
+            });
+          </script>
+          <!-- End Navbar -->
+        </div>
+        <div class="container">
+          <div class="page-inner">
+            <div class="page-header">
+              <h3 class="fw-bold mb-3">Generate DockerFiles</h3>
+              <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                  <a href="#">
+                    <i class="icon-home"></i>
+                  </a>
+                </li>
+                <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="#">DockerFile</a>
+                </li>
+              </ul>
+            </div>
+            <form id="upload-dockerfile-form" enctype="multipart/form-data">
+              <input type="file" id="dockerfile-input" accept="Dockerfile,.txt" />
+              <button type="button" class="btn btn-success" onclick="uploadDockerfile()">Upload Dockerfile</button>
+          </form>
+          
+            <div class="row">
+              <div class="col-md-12">
+                <form id="add-line-form">
+                  <div class="form-group">
+                    <button type="button" id="add-from" class="btn btn-secondary" data-toggle="tooltip" title="Specifies the base image to use.">Add FROM</button>
+                    <button type="button" id="add-run" class="btn btn-secondary" data-toggle="tooltip" title="Executes a command in a new layer on top of the current image.">Add RUN</button>
+                    <button type="button" id="add-cmd" class="btn btn-secondary" data-toggle="tooltip" title="Provides defaults for an executing container.">Add CMD</button>
+                    <button type="button" id="add-entrypoint" class="btn btn-secondary" data-toggle="tooltip" title="Sets the command that will be run inside the container.">Add ENTRYPOINT</button>
+                    <button type="button" id="add-copy" class="btn btn-secondary" data-toggle="tooltip" title="Copies files from your local filesystem into the Docker image.">Add COPY</button>
+                    <button type="button" id="add-add" class="btn btn-secondary" data-toggle="tooltip" title="Adds files from a URL or a tar file into the image.">Add ADD</button>
+                    <button type="button" id="add-workdir" class="btn btn-secondary" data-toggle="tooltip" title="Sets the working directory for the container.">Add WORKDIR</button>
+                    <button type="button" id="add-env" class="btn btn-secondary" data-toggle="tooltip" title="Sets environment variables in the container.">Add ENV</button>
+                    <button type="button" id="add-expose" class="btn btn-secondary" data-toggle="tooltip" title="Informs Docker that the container listens on the specified network ports.">Add EXPOSE</button>
+                    <button type="button" id="add-volume" class="btn btn-secondary" data-toggle="tooltip" title="Creates a mount point with the specified path and marks it as holding externally mounted volumes.">Add VOLUME</button>
+                    <button type="button" id="add-user" class="btn btn-secondary" data-toggle="tooltip" title="Sets the user name or UID to use when running the image.">Add USER</button>
+                    <button type="button" id="add-arg" class="btn btn-secondary" data-toggle="tooltip" title="Defines a build-time variable.">Add ARG</button>
+                    <button type="button" id="add-label" class="btn btn-secondary" data-toggle="tooltip" title="Adds metadata to an image.">Add LABEL</button>
+                    <button type="button" id="add-onbuild" class="btn btn-secondary" data-toggle="tooltip" title="Adds a trigger instruction to be executed later.">Add ONBUILD</button>
+                    <button type="button" id="add-stopsignal" class="btn btn-secondary" data-toggle="tooltip" title="Sets the system call signal that will be sent to the container to exit.">Add STOPSIGNAL</button>
+                    <button type="button" id="add-shell" class="btn btn-secondary" data-toggle="tooltip" title="Override default shell instructions in Docker.">Add SHELL</button>
+                  </div>
+                  
+                  <div class="form-group" id="details-container" hidden>
+                    <input type="text" id="line-input" name="line-input" class="form-control" placeholder="Enter details" required>
+                    <button type="submit" id="submit-line" name="submit-line" class="btn btn-primary">Submit</button>
+                  </div>
+                  <div id="lines-container"></div>
+                  <div class="form-group mt-3">
+                    <input type="text" id="dockerfile-name" name="dockerfile-name" class="form-control" placeholder="Enter Dockerfile Name" required>
+                  </div>
+                  <div id="dockerfile-lines"></div>
+
+                  <button id="generate-dockerfile" name="generate-dockerfile" class="btn btn-secondary">Save Dockerfile</button>
+                </form>
+                
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+const apiUrl = 'http://localhost:5000/dockerfilees';
+
+let dockerFileId = '';
+let lines = [];
+let currentCommand = '';
+
+function handleCommandButton(command) {
+  currentCommand = command;
+  document.getElementById('details-container').hidden = false;
+
+}
+
+
+// Add event listeners to buttons
+document.getElementById('add-from').addEventListener('click', () => handleCommandButton('FROM'));
+document.getElementById('add-run').addEventListener('click', () => handleCommandButton('RUN'));
+document.getElementById('add-cmd').addEventListener('click', () => handleCommandButton('CMD'));
+document.getElementById('add-entrypoint').addEventListener('click', () => handleCommandButton('ENTRYPOINT'));
+document.getElementById('add-copy').addEventListener('click', () => handleCommandButton('COPY'));
+document.getElementById('add-add').addEventListener('click', () => handleCommandButton('ADD'));
+document.getElementById('add-workdir').addEventListener('click', () => handleCommandButton('WORKDIR'));
+document.getElementById('add-env').addEventListener('click', () => handleCommandButton('ENV'));
+document.getElementById('add-expose').addEventListener('click', () => handleCommandButton('EXPOSE'));
+document.getElementById('add-volume').addEventListener('click', () => handleCommandButton('VOLUME'));
+document.getElementById('add-user').addEventListener('click', () => handleCommandButton('USER'));
+document.getElementById('add-arg').addEventListener('click', () => handleCommandButton('ARG'));
+document.getElementById('add-label').addEventListener('click', () => handleCommandButton('LABEL'));
+document.getElementById('add-onbuild').addEventListener('click', () => handleCommandButton('ONBUILD'));
+document.getElementById('add-stopsignal').addEventListener('click', () => handleCommandButton('STOPSIGNAL'));
+document.getElementById('add-shell').addEventListener('click', () => handleCommandButton('SHELL'));
+
+// Function to handle adding a line to the Dockerfile
+function addCommandToDockerfile() {
+  const additionalDetails = document.getElementById('line-input').value;
+  if (additionalDetails) {
+    const line = `${currentCommand} ${additionalDetails}`;
+    fetch(`${apiUrl}/${dockerFileId}/lines`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line })
+    })
+    .then(response => response.json())
+    .then(data => {
+      addLineToDisplay(line, data._id);
+      document.getElementById('line-input').value = '';
+      document.getElementById('details-container').hidden = true;
+    })
+    .catch(error => console.error('Error:', error));
+  }
+}
+
+document.getElementById('submit-line').addEventListener('click', addCommandToDockerfile);
+
+// Function to load the Dockerfile from the server
+function loadDockerFile() {
+  const storedDockerfileId = localStorage.getItem('dockerfileId');
+  if (storedDockerfileId) {
+    dockerFileId = storedDockerfileId;
+    fetch(`${apiUrl}/${dockerFileId}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('dockerfile-name').value = data.name || '';
+        data.lines.forEach((line, index) => addLineToDisplay(line, index));
+      })
+      .catch(error => console.error('Error:', error));
+  } else {
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      dockerFileId = data._id;
+    })
+    .catch(error => console.error('Error:', error));
+  }
+}
+
+// Function to add a line to the display
+function addLineToDisplay(line, lineIndex) {
+  const container = document.getElementById('lines-container');
+  const lineItem = document.createElement('div');
+  lineItem.className = 'line-item';
+  lineItem.innerHTML = `
+    <span class="line-text">${line}</span>
+    <div class="line-actions">
+      <button onclick="deleteLine(${lineIndex})" class="btn btn-black btn-border">Delete</button>
+      <button onclick="updateLine(${lineIndex})" class="btn btn-success btn-border">Update</button>
+    </div>
+  `;
+  container.appendChild(lineItem);
+}
+
+// Function to handle deleting a line from the Dockerfile
+function deleteLine(lineIndex) {
+  fetch(`${apiUrl}/${dockerFileId}/lines/${lineIndex}`, {
+    method: 'DELETE'
+  })
+  .then(() => {
+    const container = document.getElementById('lines-container');
+    container.removeChild(container.childNodes[lineIndex]);
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+// Function to handle updating a line in the Dockerfile
+function updateLine(lineIndex) {
+  const lineElement = document.querySelectorAll('.line-item')[lineIndex];
+  const lineTextElement = lineElement.querySelector('.line-text');
+
+  const inputField = document.createElement('input');
+  inputField.type = 'text';
+  inputField.value = lineTextElement.textContent;
+  inputField.className = 'form-control';
+  
+  lineTextElement.replaceWith(inputField);
+  
+  const updateButton = lineElement.querySelector('.btn-success');
+  updateButton.textContent = 'Save';
+  updateButton.onclick = () => saveUpdatedLine(lineIndex, inputField.value);
+}
+
+function saveUpdatedLine(lineIndex, newLine) {
+  fetch(`${apiUrl}/${dockerFileId}/lines/${lineIndex}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ line: newLine })
+  })
+  .then(() => {
+    const lineElement = document.querySelectorAll('.line-item')[lineIndex];
+    const inputField = lineElement.querySelector('input');
+
+    const lineTextElement = document.createElement('span');
+    lineTextElement.className = 'line-text';
+    lineTextElement.textContent = newLine;
+    inputField.replaceWith(lineTextElement);
+    
+    const saveButton = lineElement.querySelector('.btn-success');
+    saveButton.textContent = 'Update';
+    saveButton.onclick = () => updateLine(lineIndex);
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+
+function uploadDockerfile() {
+    const input = document.getElementById('dockerfile-input');
+    const file = input.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const contents = event.target.result;
+            displayDockerfileLines(contents);
+        };
+
+        reader.readAsText(file);
+    } else {
+        alert("Please select a Dockerfile to upload.");
+    }
+}
+
+function displayDockerfileLines(contents) {
+    const lines = contents.split('\n');
+    const linesContainer = document.getElementById('dockerfile-lines');
+
+    linesContainer.innerHTML = '';
+
+    lines.forEach((line, index) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'line-item';
+
+        const lineInput = document.createElement('input');
+        lineInput.type = 'text';
+        lineInput.name = `line-${index}`;
+        lineInput.value = line;
+        lineInput.className = 'line-input';
+
+        const saveButton = document.createElement('button');
+        saveButton.className = 'btn btn-success';
+        saveButton.textContent = 'Save';
+        saveButton.onclick = () => saveUpdatedLine(index, lineInput.value);
+
+        lineDiv.appendChild(lineInput);
+        lineDiv.appendChild(saveButton);
+
+        linesContainer.appendChild(lineDiv);
+    });
+}
+
+
+// generating the Dockerfile
+document.getElementById('generate-dockerfile').addEventListener('click', function() {
+    if (!dockerFileId) {
+        Swal.fire('Warning!', 'Dockerfile ID is not set. Please create or load a Dockerfile first.', 'warning');
+        return;
+    }
+
+    const dockerfileName = document.getElementById('dockerfile-name').value;
+  
+    fetch(`${apiUrl}/${dockerFileId}`, {
+        method: 'PUT',  
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: dockerfileName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        return fetch(`${apiUrl}/${dockerFileId}/generate`, { method: 'POST' });
+    })
+    .then(response => response.json())
+    .then(data => {
+        Swal.fire('Success!', 'Dockerfile generated successfully!', 'success').then(() => {
+            window.location.href = '/dockerfile_list';
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'An error occurred while generating the Dockerfile.', 'error');
+    });
+});
+
+
+
+
+window.onload = loadDockerFile;
+
+
+    </script>
+
+
+
+	
+      </div>
+
+      <!-- Custom template | don't include it in your project! -->
+    
+      <!-- End Custom template -->
+    </div>
+    <!--   Core JS Files   -->
+    <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="../assets/js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="../assets/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="../assets/js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Google Maps Plugin -->
+    <script src="../assets/js/plugin/gmaps/gmaps.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="../assets/js/kaiadmin.min.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="../assets/js/setting-demo2.js"></script>
+	<script src="/assets/js/script.js"></script>
+  <!-- Bootstrap CSS -->
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip(); 
+});
+
+  </script>
+  <script>
+    function logout()
+    {
+        var c  = window.confirm("want to log out");
+        if (c == true)
+        {
+        localStorage.clear();
+        location.replace("/login");
+        }
+    }
+  </script>
+</body>
+
+</html>
